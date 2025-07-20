@@ -1,0 +1,25 @@
+\chapter{FUTURE RESEARCH}\label{ch:future_research}
+
+This paper, though bearing a short yet ambitious title, may give the impression of covering all aspects of Qur'\=anic text analytics. While such comprehensive coverage is possible, the limited number of prior works using this approach necessitates the author to first lay down the fundamentals of text analytics and demonstrate the potential of applying Statistics and Machine Learning in the analysis of the Qur'\=an. This new perspective and methodology open up numerous avenues for further research, some of which are discussed below.
+
+\section{Morphological Analysis}
+
+The morphological analysis of the Qur'\=an is an area that can be explored more deeply. This paper has shown that the morphological features of the Qur'\=an can be used to extract root words and their forms; however, many other aspects remain to be investigated. For example, the relationship between morphological features and the meanings of the text can be explored further. This includes analyzing how morphological changes correspond to shifts in meaning or theme. Additionally, morphological features can be used to examine different styles of writing within the Qur'\=an, and how these styles relate to its themes and topics.
+
+\section{Rhythmic Analysis}
+
+Rhythmic analysis of the Qur'\=an is a complex and multi-layered subject that offers numerous research possibilities. While this paper proposes several methods of visualizing rhythmic patterns—including basic computation of transition probabilities—there are many more dimensions to consider. For instance, the relationship between rhythmic structure and textual meaning can be further investigated, examining how rhythmic variations align with shifts in meaning or theme.
+
+Currently, the rhythmic encoding captures only three syllable types: those with short vowels, those with long vowels, and those with \arb[trans]{maddaT} \arb{maddaT}. These represent only the minimal rhythmic distinctions within Arabic. A more nuanced analysis would include other phonetic features of Arabic, such as the emphatic, guttural, and labial letters. Incorporating these into the rhythmic encoding would allow for a richer and more comprehensive analysis. Cadence variations introduced by these letters and their associated diacritics can also be encoded.
+
+Another promising approach is to extract rhythmic patterns from audio recitations of the Qur'\=an by Muslim reciters, rather than from the text alone. This involves analyzing audio recordings using techniques such as Fourier or wavelet analysis to study frequency and amplitude patterns. The extracted rhythmic data could then be compared with those derived from the text, providing a more holistic understanding. This would also enable the analysis of various recitation styles and how they correspond to the rhythmic structure of the text.
+
+Furthermore, transition probabilities can be employed to examine whether there are distinct rhythmic characteristics between \arb[trans]{makkiyyaT} \arb{makkiyyaT} and \arb[trans]{madaniyyaT} \arb{madaniyyaT} \arb[trans]{suwar} \newline\arb{suwar}.
+
+\section{Other Symmetric Structures}
+
+This paper focuses primarily on concentric structures in the Qur'\=an using Genetic Algorithms, but other literary patterns such as \textit{parallelism} and \textit{chiasmus} also merit exploration.
+
+\section{Other Research Areas}
+
+The methodologies presented in this paper can be extended to the study of other Islamic texts, such as the \arb[trans]{'a.hAdI_t} \arb{'a.hAdI_t}, and additional texts available via the \texttt{Kitab.jl} library \cite{al_ahmadgaid_b_asaad_kitab}. These resources can form a networked corpus suitable for analysis using the same statistical and machine learning techniques.

@@ -1,0 +1,226 @@
+\chapter{Theoretical Results}
+\label{appendix:theoretical_results}
+\setcounter{section}{1}
+\section{Rhythmic Profiler and Clustering}
+The following are the mathematical formulation for the proposed solution for rhythmic analysis, in particular for the rhythmic conditional probability profile, and rhythmic clustering.
+\begin{defn}[\it Syllable Extractor]\label{defn:syllable_extractor}
+    Let $\mathscr{D}$ be the Qur'\=an corpus, where each $a \in \mathscr{D}$ is an \arb[trans]{'ayaT} \arb{'ayaT} (verse). Define the \textit{rhythmic state space} as $\mathscr{S} := \{\gamma, \kappa, \eta\}$, where $\gamma$, $\kappa$, and $\eta$ represent a \textit{short vowel}, \textit{long vowel}, and \arb[trans]{maddaT} \arb{maddaT}, respectively. Let $\mathscr{S}^*$ denote the Kleene closure of $\mathscr{S}$, i.e., the set of all finite sequences over $\mathscr{S}$. Then $\rho : \mathscr{D} \rightarrow \mathscr{S}^*$ is the \textit{syllable extractor} function that maps each verse $a \in \mathscr{D}$ to its corresponding sequence of rhythmic units.
+\end{defn}
+\begin{defn}[\it Rhythmic State Conditional Probability]
+    From Definition~\ref{defn:syllable_extractor}, let $R := \{r_1, \dots, r_m\}$ be a collection of finite sequences over the rhythmic state space $\mathscr{S}$. For any adjacent pair of rhythmic states $s, s' \in \mathscr{S}$ observed in these sequences, the empirical conditional probability of transitioning from $s$ to $s'$ is defined as:
+    \[
+        p(s' \mid s) = \frac{p(s, s')}{p(s)},
+    \]
+    where $p(s, s')$ is the empirical joint probability of observing state $s$ followed by $s'$ across all sequences in $R$, and $p(s)$ is the empirical marginal probability of state $s$.
+\end{defn}
+\begin{defn}[\it Rhythmic Profiler]
+    Let $S:=\{s_1,\cdots,s_n\}$ be the sequence of rhythmic states s.t. $s_i\in\mathscr{S}$ and $S\subseteq\mathscr{S}^*$ ($\mathscr{S}$ and $\mathscr{S}^*$ defined in Definition~\ref{defn:syllable_extractor}), then let $\psi:\mathscr{R}\rightarrow\mathscr{W}$ be the mapping of sequence of rhythmic states $S\in\mathscr{R}$ to a $\mathbb{R}^{3}\times\mathbb{R}^3$ matrix of $\mathscr{W}$, s.t.
+    \begin{equation}
+        \psi(S):=\begin{pmatrix}
+            p(s=\gamma\mid s'=\gamma) & p(s=\kappa\mid s'=\gamma) & p(s=\eta\mid s'=\gamma) \\
+            p(s=\gamma\mid s'=\kappa) & p(s=\kappa\mid s'=\kappa) & p(s=\eta\mid s'=\kappa) \\
+            p(s=\gamma\mid s'=\eta) & p(s=\kappa\mid s'=\eta) & p(s=\eta\mid s'=\eta)
+            \end{pmatrix},
+    \end{equation}
+\end{defn}
+
+\begin{defn}[\it Rhythmic Probability Profile]\label{defn:rhythmic_profile}
+    Let $a\in\mathscr{D}$ be the \arb[trans]{'ayaT} \arb{'ayaT} of the Qur'\=an corpus $\mathscr{D}$, then $\mathscr{R}:=\{\rho(a_1),\cdots,\rho(a_m)\}$ is the collection of the corresponding sequence of rhythmic units of $a_i$, where $m\in\mathbb{N}$ is the total length of \arb[trans]{'ayaT} \arb{'ayaT} in the Qur'\=an. Define $\{\rho(a_{1,k}),\cdots,\rho(a_{n,k})\}\subseteq\mathscr{R}$ be the set of sequence of rhythmic units for \arb[trans]{sUraT} \arb{sUraT} $B_k$, so that $B_k:=\bigcup_{\forall i} \rho(a_i,k)=\{s_{1,k},\cdots,s_{n,k}\}$ is the collection of unions of all sequence of rhythmic states of \arb[trans]{sUraT} \arb{sUraT} $B_k$. So that, $\operatorname{vec}(\psi(S)):=[p(\gamma\mid\gamma),p(\gamma\mid\kappa),p(\gamma\mid\eta),p(\kappa\mid\gamma),\cdots,p(\eta\mid\eta)]^{\top}, \operatorname{vec}(\psi(S))\in\mathbb{R}^{9}$ is the \textit{rhythmic probability profile} of \arb[trans]{sUraT} \arb{sUraT} $B_k$.
+\end{defn}
+\begin{defn}[\it Rhythmic Profile Matrix]
+    From Definition \ref{defn:rhythmic_profile}, let $\mathbf{b}_k\in\mathbb{R}^9$ be the rhythmic profile of the $k$th \arb[trans]{sUraT} \arb{sUraT}, then $\mathbf{B}:=[\mathbf{b}_1,\cdots,\mathbf{b}_{114}]$ is the \textit{rhythmic profile matrix} of the Qur'\=an corpus.
+\end{defn}
+\begin{defn}[\it k-means Function]
+    Let $\mathscr{B}$ be the collection of rhythmic profile matrices of the Qur'\=an corpus or subset of it, then $k:\mathscr{B}\rightarrow\mathscr{C}$ is the $k$-means function which maps a rhythmic profile matrix $\mathbf{B}$ into $\mathbf{c}:=[c_{1,1},c_{2,1},\cdots,c_{m,n}]^{\top}$ which is a vector containing the corresponding assigned cluster to each column of $\mathbf{B}$, where $m\in\mathbb{N}$ is the length of the corpus, and $n\in\mathbb{N}$ is the number of clusters specified.
+\end{defn}
+\section{Structural Border Optimization Algorithm}
+The following are the mathematical formulations of the proposed solution for finding the optimal structural borders of classes of concentric structure.
+\begin{defn}[\it Concentric]\label{defn:concentric}
+    Let $\mathscr{D}$ be a collection of texts, then $\mathscr{D}$ is said to have a \textit{concentric} or \textit{ring} structure if and only if $\exists\;\mathscr{A}_i\subseteq\mathscr{D},\mathscr{C}\subseteq\mathscr{D},$ and $\mathscr{A}_i^{*}\subseteq\mathscr{D},i\in\mathbb{N}_1$; and that these sets are arranged as follows in $\mathscr{D}$:  $\mathscr{A}_1,\cdots,\mathscr{A}_n,\mathscr{C},\mathscr{A}_1^{*},\cdots,\mathscr{A}_n^{*}$, s.t. $\mathscr{A}_i^{*}$ \underline{mirrors} $\mathscr{A}_i$ in semantic, and that $\mathscr{C}$ is the center section of the document $\mathscr{D}$ that is \underline{not related} to both $\mathscr{A}_i$ and $\mathscr{A}_i^{*}$.
+\end{defn}
+
+The underlined words above will be used in the next section, because mathematically it begs further definition on what we mean by "mirrors" and "not related." This will be defined in the next section. Now, another pattern that was observed by \citeA{farrin2014structure} is \textit{chiasm}, which is basically \textit{concentrism} structure but with no center class. Succeeding definitions and results outline the proposed mathematical formulation of finding the optimal structural borders of a given number of classes of concentric structure.
+\begin{defn}[\it CL-AraBERT Embedding Function]
+    Let $\mathscr{D}$ be the collection of texts, e.g. \arb[trans]{'AyAt} \arb{'AyAt} in a \arb[trans]{suwar} \arb{suwar}, and let $s_i\in\mathscr{D}$, then  $\omega:s\rightarrow\mathbb{R}^{r},r\in\mathbb{N}_{\geq 1}$ is the \textit{CL-AraBERT} embedding function s.t. $\omega(s_i)=\mathbf{z}_i\in\mathbb{R}^{r}$, where $\mathbf{z}_i$ is the $i$th CL-AraBERT sentence embedding of the document $\mathscr{D}$, and $r$ is the dimension of the embedding space. 
+\end{defn}
+\begin{defn}[\it Structural Borders]\label{defn:structural_borders}
+    Let $\mathscr{D}$ be a collection of texts, then for $s_i\in\mathscr{D}, i\in\mathbb{N}$, \exists\; \textit{structural borders} $x_0<\cdots<x_{n}$ s.t. $\mathscr{A}_j:=\{s_{x_{j-1}},\cdots,s_{x_{j}}\}\subseteq\mathscr{D},j\in\mathbb{N}$.
+\end{defn}
+\begin{defn}[\it Dirichlet Structural Proportions]\label{defn:dirichlet_structural_proportions}
+    Let $\mathbf{x}_i:=[x_{i,1},\cdots,x_{i,n-1}]^{\top}$ where $i\in\mathbb{N}_{\leq v}$ and $n$ is the total number of concentric classes, then the \textit{Dirichlet Structural Proportions} are generated from the Dirichlet distribution, that is $\mathbf{x}_i\overset{\text{iid}}{\sim}\mathcal{D}(\alpha_1,\cdots,\alpha_{n-1})$, where $\alpha_i\in\mathbb{R}_{>0}$, and $\sum_{i=1}^{n-1}\alpha_i=1$. Thus,
+    \begin{equation}
+        \mathcal{D}(\mathbf{x}_i|\alpha_1,\cdots,\alpha_{n-1}):=\frac{1}{B(\alpha_1,\cdots,\alpha_{n-1})}\prod_{j=1}^{n-1}x_{i,j}^{\alpha_j-1},
+    \end{equation}
+    where $B(\alpha_1,\cdots,\alpha_{n-1})=\frac{\prod_{j=1}^{n-1}\Gamma(\alpha_j)}{\Gamma(\sum_{j=1}^{n-1}\alpha_j)}$, and $\Gamma(x)=\int_0^{\infty}t^{x-1}e^{-t}\D t$.
+\end{defn}
+\begin{remark}
+    The structural proportions need to be sorted, thus if $\rho:\mathscr{X}\rightarrow\tilde{\mathscr{X}}$ is the sorting function s.t. $\mathscr{X}:=\{\mathbf{x}_1,\cdots,\mathbf{x}_m\}$, then $\rho(\mathscr{X})=\tilde{\mathscr{X}}=\{[x_{i,j},\cdots,x_{i,n-1}]^{\top}:x_{i,j}<x_{i,j+1}\}$ is the set of sorted structural proportions.
+\end{remark}
+
+\begin{defn}[\it Dirichlet Propulation]\label{defn:dirichlet_population}
+    From Definition \ref{defn:dirichlet_structural_proportions}, let $v$ be the total number of sections of texts, e.g. number of \arb[trans]{'AyAt} \arb{'AyAt} in a \arb[trans]{suwar} \arb{suwar}, then the \textit{Dirichlet population} is $\mathbf{y}_i:=v\mathbf{x}_i=[vx_{i,1},\cdots,vx_{i,n-1}]^{\top},\mathbf{y}_i\in\mathscr{P}$, where $\mathscr{P}$ is the solution space.
+\end{defn}
+\begin{remark}
+    If the goal is to find $n$ classes for the concentric structure, then the intervals for structural borders are $[x_0=1,x_1),[x_1,x_2),\cdots,[x_{n-1},x_n=v]$ where $v$ is the total number of sections (e.g. \arb[trans]{'ayaT} \textnormal{\arb{'ayaT}} as the section) of the texts. Therefore, since $x_0$ and $x_n$ are both known, then the only unknowns are $x_1,\cdots,x_{n-1}$, and these are the structural proportions. Thus, the Dirichlet population is a vector of $n-1$ proportions, i.e. $\mathbf{y}_i:=[vx_{i,1},\cdots,vx_{i,n-1}]^{\top}$.
+\end{remark}
+\begin{defn}[\it Discrete Uniform Population]\label{defn:discrete_uniform_population}
+    Let $\mathbf{x}_i:=[x_{i,1},\cdots,x_{i,n-1}]^{\top}$ where $n$ is the total number of target classes for concentric structure, then the \textit{uniform population} is generated from the discrete uniform distribution, that is $\mathbf{x}_i\overset{\text{iid}}{\sim}\mathcal{U}(k,m-k)$, where $k\in\mathbb{N}_{\geq \delta},\delta>1$ serves as the padding, and $x_{i,j}\in\mathbb{R}_{>0}$, and $\sum_{j=1}^{n-1}x_{i,j}=1$. Thus,
+    \begin{equation}
+        \mathcal{U}_{\mathbb{N}}(\mathbf{x}_i|k,v-k):=\prod_{j=1}^{n-1}\frac{1}{v-2k}.
+    \end{equation}
+\end{defn}
+\begin{remark}
+    For this study, $k$ is set to 10 for finding the optimal structural borders of \arb[trans]{sUraTu 'l-baqaraT} \textnormal{\arb{sUraTu 'l-baqaraT}}.
+\end{remark}
+\begin{prop}[\it Marginal distribution of components of Dirichlet samples]\label{prop:mixture_beta}
+Let $\mathbf{X}_i = [x_{i,1}, \dots, x_{i,n-1}]^\top\overset{\text{iid}}{\sim}\mathcal{D}(\alpha_1, \dots, \alpha_{n-1}), \forall i \in\mathbb{N}^{m}$. Define the set
+\[
+\mathscr{Y} := \{x_{i,j} \mid 1 \le i \le m,\; 1 \le j \le n-1\},
+\]
+Suppose a random variable $y_k$ is drawn by selecting an element uniformly at random from $\mathscr{Y}$. Then the distribution of $y_k$ is given by:
+\[
+y_k \sim \frac{1}{n-1} \sum_{j=1}^{n-1} \mathcal{B}(\alpha_j, \alpha_0 - \alpha_j), \quad \text{where } \alpha_0 = \sum_{j=1}^{n-1} \alpha_j,
+\]
+and $\mathcal{B}(\cdot,\cdot)$ denotes the Beta distribution.
+\end{prop}
+    
+\begin{proof}
+    For a fixed $i$, the marginal distribution of $x_{i,j}$ is:
+    \begin{equation}\label{eq:dirichlet_marginal}
+        x_{i,j}\overset{\textnormal{iid}}{\sim}\mathcal{B}(\alpha_j,\alpha_0-\alpha_j),\quad\text{where}\;\alpha_0=\sum_{j=1}^{n-1}\alpha_j.
+    \end{equation}
+    This is a known property of the Dirichlet distribution, where each coordinate marginal follows a Beta distribution. Now, let 
+    \begin{equation}
+        \mathscr{Y}:=\{x_{i,j}:i\in\mathbb{N}_{\leq m}, j\in\mathbb{N}_{\leq n-1}\},
+    \end{equation}
+    then $k\in\mathbb{N}_{\leq m(n-1)}$. Let $y_k$ be a uniformly random draw from the full set $\mathscr{Y}$, then 
+    \begin{equation}
+        p(y_k=x_{i,j})=\frac{1}{m(n-1)}.
+    \end{equation}
+    Hence, the distribution of $y_k$ is given by:
+    \begin{equation}
+        p(y_k\leq z)=\frac{1}{m(n-1)}\sum_{i=1}^m\sum_{j=1}^{n-1}p(x_{i,j}\leq z).
+    \end{equation}
+    Further, since $x_{i,j}$ is independent and identically Beta distributed as in Equation \ref{eq:dirichlet_marginal} for fixed $j$, then:
+    \begin{equation}
+        p(x_{1,j}\leq z)=p(x_{2,j}\leq z)=\cdots=p(x_{m,j}\leq z),
+    \end{equation}
+    so that $p$ can be expressed as $p(x_{\cdot,j}\leq z)$, that is, the probability is not dependent on the $i$th index, thus for fixed $j$ we have:
+    \begin{equation}
+        \sum_{i=1}^m p(x_{\cdot,j}\leq z)=m\cdot p(x_{\cdot,j}\leq z).
+    \end{equation}
+    Thus, we can write:
+    \begin{equation}
+        p(y_k\leq z)=\frac{1}{n-1}\sum_{j=1}^{n-1}p(x_{\cdot,j}\leq z).
+    \end{equation}
+    Therefore,
+    \begin{equation}
+        y_k\mid\mathfrak{G}^{Y}\overset{\textnormal{iid}}{\sim}\frac{1}{n-1}\sum_{j=1}^{n-1}\mathcal{B}(\alpha_j,\alpha_0-\alpha_j),\quad\text{where}\;\alpha_0=\sum_{j=1}^{n-1}\alpha_j.
+    \end{equation}
+\end{proof}
+\begin{defn}[\it Cosine Distance]\label{defn:cosine_distance}
+    Let $\mathbf{z}_i$ and $\mathbf{z}_j$ be the CL-AraBERT embeddings of the $i$th and $j$th words, then the cosine distance denoted by $d_{\cos}(\cdot)$ between $\mathbf{z}_i$ and $\mathbf{z}_j$ is defined as:
+    \begin{equation}
+        d_{\cos}(\mathbf{z}_i,\mathbf{z}_j):=1-\frac{\mathbf{z}_i\cdot\mathbf{z}_j}{||\mathbf{z}_i||\cdot||\mathbf{z}_j||},
+    \end{equation}
+    where $\cdot$ is the dot product, and $||\cdot||$ is the Euclidean norm.
+\end{defn}
+\begin{defn}[\it Concentric Classes]\label{defn:concentric_classes}
+    Let $\mathscr{D}$ be a collection of sentence embeddings of given texts s.t. given a vector of structural borders $\mathbf{x}_i:=[x_{i,1},\cdots,x_{i,n-1}]^{\top},i\in\mathbb{N}$ and $j\in\mathbb{N}$, \exists\; \textit{concentric classes} as follows:
+    \begin{align}
+        \mathscr{A}_{i,j}&:=\left\{\mathbf{z}_{x_{i,j}},\cdots,\mathbf{z}_{x_{i,j+1}}\right\},\quad 0\leq j\leq \frac{n-1}{2},\\
+        \mathscr{C}_{i}&:=\left\{\mathbf{z}_{x_{i,\frac{n-1}{2}}+1},\cdots,\mathbf{z}_{x_{i,\frac{n-1}{2}+1}}\right\},\\
+        \mathscr{A}_{i,j}^{*}&:=\left\{\mathbf{z}_{x_{i,j}+1},\cdots,\mathbf{z}_{x_{i,j}}\right\},\quad \frac{n-1}{2}+1\leq j\leq n,
+    \end{align}
+    where $\mathscr{A}_{i,j}$ and $\mathscr{A}_{i,j}^{*}$ form a pair since $\frac{n-1}{2}-0=n-\frac{n+1}{2}-1$.
+\end{defn}
+\begin{defn}[\it Five Number Summary]\label{defn:five_number_summary}
+    From Definition \ref{defn:concentric_classes}, for a given concentric class $\mathscr{A}_{i,j}$ with $\mathbf{z}_{i,j}\in\mathscr{A}$, let $\mathbf{A}_{i,j}:=[\mathbf{z}_{i,j}^{\top},\cdots,\mathbf{z}_{i,k}^{\top}]^{\top}$ be the matrix form of the sentence embeddings $\mathbf{z}\in\mathbb{R}^r$ s.t. $\mathbf{v}_{i,l}\in\mathbb{R}^k$ and $l\in\mathbb{N}_{\leq r}$ be the column vector of $\mathbf{A}_{i,j}$, then the \textit{five number summary} of $\mathscr{A}_{i,j}$, denoted by $\gamma(\mathscr{A}_{i,j})$ is defined as:
+    \begin{align}
+        \gamma(\mathscr{A}_{i,j}):=&\left\{\min(\mathscr{A}_{i,j}),q_1(\mathscr{A}_{i,j}),\text{median}(\mathscr{A}_{i,j}),q_3(\mathscr{A}_{i,j}),\max(\mathscr{A}_{i,j})\right\}\\
+        =&\left[\min(\mathbf{A}_{i,j})^{\top},q_1(\mathbf{A}_{i,j})^{\top},\text{median}(\mathbf{A}_{i,j})^{\top},q_3(\mathbf{A}_{i,j})^{\top},\max(\mathbf{A}_{i,j})^{\top}\right]^{\top}
+    \end{align}
+    where 
+    \begin{align}
+        \min(\mathbf{A}_{i,j}):=&[\min(\mathbf{v}_{i,1}),\cdots,\min(\mathbf{v}_{i,r})]^{\top},\\
+        q_1(\mathbf{A}_{i,j}):=&[q_1(\mathbf{v}_{i,1}),\cdots,q_1(\mathbf{v}_{i,r})]^{\top},\\
+        \operatorname{median}(\mathbf{A}_{i,j}):=&[\operatorname{median}(\mathbf{v}_{i,1}),\cdots,\operatorname{median}(\mathbf{v}_{i,r})]^{\top},\\
+        q_3(\mathbf{A}_{i,j}):=&[q_3(\mathbf{v}_{i,1}),\cdots,q_3(\mathbf{v}_{i,r})]^{\top},\\
+        \max(\mathbf{A}_{i,j}):=&[\max(\mathbf{v}_{i,1}),\cdots,\max(\mathbf{v}_{i,r})]^{\top},
+    \end{align}
+    and $\min(\mathbf{v}),q_1(\mathbf{v}),\operatorname{median}(\mathbf{v}),q_3(\mathbf{v}),\max(\mathbf{v})$ are the minimum, first quartile, median, third quartile, and maximum of $\mathbf{v}$, respectively.
+\end{defn}
+\begin{remark}
+    Since every concentric class $\mathscr{A}_{i,j}$ can have differing number of elements, Definition \ref{defn:five_number_summary} guarantees that the newly summarized embedding $\gamma(\mathscr{A}_{i,j})\in\mathbb{R}^5\times\mathbb{R}^r$ will have the orignal dimension of embedding space but the varying number of sentence embeddings are now summarized into five numbers, which are robust statistics that are less sensitive to outliers, and it provides a good summary of the distribution of the data. This will make it easier to compare the concentric classes $\mathscr{A}_{i,j},\mathscr{A}_{i,j}^{*},$ and $\mathscr{C}_i$ because of the same number of dimensions.
+\end{remark}
+\begin{defn}[\it Cosine Distance on Summaries]\label{defn:cosine_distance_on_summaries}
+    From Definition \ref{defn:five_number_summary}, let $\mathbf{W}:=[\mathbf{w}_1,\cdots,\mathbf{w}_r]$ where $\mathbf{w}_l:=[\min(\mathbf{v}_{i,1}),q_1(\mathbf{v}_{i,1}),\operatorname{median}(\mathbf{v}_{i,1}),q_3(\mathbf{v}_{i,1}),\max(\mathbf{v}_{i,1})]^{\top}$, then the \textit{cosine distance on summaries} is defined as:
+    \begin{equation}
+        d_{\cos}(\gamma(\mathscr{A}),\gamma(\mathscr{A}^*)):=d_{\cos}(\mathbf{W},\mathbf{W}^*):=[d_{\cos}(\mathbf{w}_1,\mathbf{w}_1^*),\cdots,d_{\cos}(\mathbf{w}_r,\mathbf{w}_r^*)]^{\top}.
+    \end{equation}
+\end{defn}
+\begin{defn}[\it Global Cost Function]\label{defn:global_cost_function}
+    From Definition \ref{defn:concentric_classes} and \ref{defn:cosine_distance_on_summaries}, the \textit{global cost function} is defined as:
+    \begin{align}
+        g(\mathscr{D};\mathbf{x}_{i}):=&\sum_{j=0}^{\frac{n-1}{2}}\mu\left\{d_{\cos}\left[\gamma\left(\mathscr{A}_{i,j}\right),\gamma\left(\mathscr{A}_{i,\frac{n-1}{2}+1+j}^{*}\right)\right]\right\}\nonumber\\
+        &-\sum_{j=0}^{\frac{n-1}{2}}\mu\left\{d_{\cos}\left[\gamma\left(\mathscr{C}_i\right),\gamma\left(\mathscr{A}_{i,j}\right)\right]\right\}\nonumber\\
+        &-\sum_{j=0}^{\frac{n-1}{2}}\mu\left\{d_{\cos}\left[\gamma\left(\mathscr{C}_i\right),\gamma\left(\mathscr{A}_{i,\frac{n-1}{2}+1+j}^{*}\right)\right]\right\},
+    \end{align}
+    where $\mu(\cdot)$ is the mean function.
+\end{defn}
+
+\begin{remark}
+    Minimizing the global cost function $g(\cdot)$ is equivalent to minimizing the cosine distance between $\mathscr{A}_{i,j}$ and $\mathscr{A}_{i,\frac{n-1}{2}+1+j}^{*}$ (since both should mirror each other from Definition \ref{defn:concentric}), and maximizing the negative cosine distance between both $\mathscr{C}_i$ versus $\mathscr{A}_{i,j}$, and $\mathscr{C}_i$ versus $\mathscr{A}_{i,\frac{n-1}{2}+1+j}^{*}$ (since $\mathscr{C}_i$ as a center class should not relate to other classes according to Definition \ref{defn:concentric}).
+\end{remark}
+
+\begin{defn}[\it Optimal Structural Borders]\label{defn:optimal_structural_borders}
+    Let $\mathscr{D}$ be a collection of texts, then the \textit{optimal structural borders} are defined as:
+    \begin{equation}
+        \hat{\mathbf{x}}_{i}:=\underset{\mathbf{x}_i\in\mathscr{P}}{\arg\min}g(\mathscr{D};\mathbf{x}_i),
+    \end{equation}
+    where $\mathscr{P}$ is the solution space.
+\end{defn}
+
+\begin{defn}[\it Sampling Parents]\label{defn:sampling_parents}
+    Let $\mathscr{X}_h:=\{\mathbf{x}_{i}\mid 1\leq i\leq m\}$ be the $h$th population, then \textit{sampling $s$ candidate structural borders}, denoted as $\mathbf{y}_j, j \in\mathbb{N}_{\leq s}$ from $\mathscr{X}_h$ is defined as
+    \begin{equation}
+        \mathbf{y}_j\overset{\textnormal{iid}}{\sim}\mathcal{U}(\mathscr{X}_h),\quad j\in\mathbb{N}_{\leq s},
+    \end{equation}
+    so that for $\mathbf{y}_j\in\mathscr{Y}$ and from Definition \ref{defn:global_cost_function}, the sampled parent is
+    \begin{equation}
+        \mathbf{y}:=\underset{\mathbf{y}_j\in\mathscr{Y}}{\arg\min}\{g(\mathscr{D};\mathbf{y}_j)\mid j \in\mathbb{N}_{\leq s}\}
+    \end{equation}
+\end{defn}
+
+\begin{defn}[\it Chromosome Crossover]\label{defn:chromosome_crossover}
+    Let $\mathscr{Y}_h:=\{\mathbf{y}_{i}\mid 1\leq i \leq m\}$ be the selected parents (structural borders), then for a candidate pair of two structural borders $\mathbf{y}_i$ and $\mathbf{y}_j, i\neq j$ from $\mathscr{Y}_h$ selected as follows:
+    \begin{equation}
+        (\mathbf{y}_i, \mathbf{y}_j)=\begin{cases}
+            (\mathbf{y}_i,\mathbf{y}_{i+1}),&i< m\\
+            (\mathbf{y}_i,\mathbf{y}_{j}), j\overset{\text{iid}}{\sim}\mathcal{U}(1,m-1),&\text{otherwise},
+        \end{cases}
+    \end{equation}
+    the \textit{crossovered chromosome} $\mathbf{u}_i$ and $\mathbf{u}_j$ are derived as follow: let $w\in\mathcal{U}_{\mathbb{N}}(1,n-3)$ and let $r\in\mathbb{R}_{[0,1]}$, then
+    \begin{equation}
+        (\mathbf{u}_i,\mathbf{u}_j):=\begin{cases}
+            [y_{i,1},\cdots,y_{i,w-1},y_{j,w},\cdots,y_{j,n-1}]^{\top},&\mathcal{U}(0,1)< r\\
+            [y_{j,1},\cdots,y_{j,w-1},y_{i,w},\cdots,y_{i,n-1}]^{\top}&\\[0.3cm]
+            \mathbf{y}_i,\mathbf{y}_j,&\text{otherwise}.
+        \end{cases}
+    \end{equation}
+\end{defn}
+
+\begin{defn}[\it Chromosome Mutation]\label{defn:chromosome_mutation}
+    Let $\mathscr{U}_h:=\{\mathbf{u}_{i}\mid 1\leq i \leq m\}$ be the crossovered structural borders, let $r\in\mathbb{R}_{[0,1]}$, then the \textit{mutation} of a candidate cross-overed structural border $\mathbf{u}_i$ is defined as:
+    \begin{equation}
+        \tilde{\mathbf{u}}_i:=\begin{cases}
+            \mathbf{u}_i-\mathbf{w},&\mathcal{U}(0,1)< r\\
+            \mathbf{u}_i,&\text{otherwise},
+        \end{cases}
+    \end{equation}
+    where $\mathbf{w}:=[w_1,\cdots,w_{n-1}]^{\top}$ and $w_j\overset{\text{iid}}{\sim}\mathcal{U}_{\mathbb{N}}(-2,2)$.
+\end{defn}
+
+\begin{defn}[\it Genetic Algorithm]
+    Let $\mathscr{D}$ be the given texts, let $\mathscr{X}_0$ be the initial \textit{population} sampled from either Dirichlet (Definition \ref{defn:dirichlet_population}) or Discrete Uniform (Definition \ref{defn:discrete_uniform_population}) distribution, then from this population the \textit{fitness score} using the global cost function (Definition \ref{defn:global_cost_function}). Given these fitness scores, the candidate structural borders or the parents are selected (Definition \ref{defn:sampling_parents}) for the next generation. The selected parents are then crossovered (Definition \ref{defn:chromosome_crossover}) to form the next generation of structural borders. The crossovered structural borders are then mutated (Definition \ref{defn:chromosome_mutation}), and finally refined by sorting the mutated results, and handling duplicate elements in a structural border vector. The final results form the next generation of structural borders. The process is repeated until the stopping criteria is met, i.e. the number of generations is reached or the fitness score does not improve. For this study, the stopping criteria is set to 50 generations. At the end of the process, the optimal structural borders are selected as the best candidate structural borders with the lowest fitness score or global cost function.
+\end{defn}
