@@ -1,0 +1,268 @@
+% to compile in windows:
+% lualatex main.tex
+%
+% to compile bibtex
+% bibtex main
+%
+% then refresh the pdf view to see changes if not reflected automatically
+\documentclass[a4paper, 12pt, oneside]{book}
+\usepackage[left=1.25in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{fancyhdr}
+\usepackage{multirow}
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mdframed}
+\usepackage{arabluatex}
+\usepackage{tikz}
+\usetikzlibrary{shapes,backgrounds,automata,chains,arrows,positioning,calc,patterns}
+\usetikzlibrary{decorations.markings,arrows}
+\usepackage{pgfplots}
+\usepackage{pifont}
+\usepackage{parnotes}
+\usepackage{newpxmath} % math font is Palatino compatible
+% \usepackage[nomath]{fontspec}
+% \usepackage{amsmath}
+\usepackage{subcaption}
+\usepackage{pdflscape}
+\usepackage{setspace}
+\usepackage[explicit,compact]{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage{apacite} % load this after hyperref
+\usepackage{listings}
+\usepackage{xcolor} % For syntax highlighting colors
+\usepackage{fancyvrb}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{english}
+\setotherlanguage{arabic}
+
+\usepackage{newfloat}
+\DeclareFloatingEnvironment[
+    fileext=loi,
+    listname={List of Listings},
+    name=Listing,
+    placement=tbhp,
+]{listing2}
+
+\mdfdefinestyle{mystyle}{
+    linewidth=1pt,
+    linecolor=black,
+    topline=true,
+    bottomline=true,
+    leftline=true,
+    rightline=true,
+    innertopmargin=10pt,
+    innerbottommargin=15pt,
+    innerrightmargin=10pt,
+    innerleftmargin=10pt,
+    roundcorner=5pt
+}
+
+\newenvironment{bottomtitledframe}[1]{%
+    \par\vspace{0.5cm}
+    \begin{mdframed}[style=mystyle]
+    \gdef\frameparamtitle{#1}% Store the parameter globally
+}{%
+    \end{mdframed}
+    \par\vspace{-1.05cm}
+    \centering\colorbox{white}{\textbf{\frameparamtitle}}% Use the stored parameter
+    \par\vspace{0.5cm}
+}
+
+% arabluatex
+\SetArbDflt*
+\newarbmark{als}{^^^^fd47}{} % alayhis salam
+
+
+% Basic configuration
+\lstset{
+    frame=single,
+    breaklines=true,
+    postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookrightarrow\space}},
+    basicstyle=\ttfamily\small\singlespacing,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{green!60!black}\itshape,
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=10pt,
+    tabsize=4,
+    showspaces=false,
+    showstringspaces=false
+}
+
+\lstdefinelanguage{Julia}{
+  keywords={
+    abstract, baremodule, begin, bitstype, break, catch, ccall,
+    const, continue, do, else, elseif, end, export, finally, for,
+    function, global, if, immutable, import, importall, in,
+    let, local, macro, module, quote, return, struct, try, type,
+    typealias, using, while
+  },
+  sensitive=true,
+  comment=[l]{\#},
+  morecomment=[n]{\#=}{=\#},
+  string=[b]",
+  morestring=[b]',
+  morestring=[b]"""
+}
+
+\setmainfont{TeX Gyre Pagella} 
+\newfontfamily\arabicfont{Amiri}[Script=Arabic,RawFeature={+ss05}]
+% remove this if you want to print it as paperback
+\setlength\oddsidemargin{\dimexpr(\paperwidth-\textwidth)/2 - 1in\relax}
+\setlength\evensidemargin{\oddsidemargin}
+
+% arabluatex options
+\SetTranslitConvention{loc}
+% \txarb{\fontspec{Scheherazade New} ﵇} - peace be upon him
+% \txarb{\fontspec{Scheherazade New} ﵈} - peace be upon them (masculine)
+% \txarb{\fontspec{Scheherazade New} ﵉} - peace be upon them (both)
+% \txarb{\fontspec{Scheherazade New} ﵍} - peace be upon her
+% \txarb{\fontspec{Scheherazade New} ﷺ} - sallalahu alayhi wa sallam
+% \txarb{\fontspec{Scheherazade New} ﷾} - subhana wa ta'ala
+% \txarb{\fontspec{Scheherazade New} ﷿} - azza wa jall
+
+
+% mdframed options
+% \definecolor{amethyst}{rgb}{0.6, 0.4, 0.8}
+% \mdfdefinestyle{MyFrame}{%
+%     linecolor=amethyst,
+%     outerlinewidth=0.3pt,
+%     roundcorner=3pt}
+\newcounter{ortho}[section]\setcounter{ortho}{0}
+\renewcommand{\theortho}{\arabic{section}.\arabic{ortho}}
+\newenvironment{ortho}[2][]{%
+\refstepcounter{ortho}%
+\ifstrempty{#1}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=orange!50]
+{\strut Orthography~\theortho};}}
+}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=orange!50]
+{\strut Orthography~\theortho:~#1};}}%
+}%
+\mdfsetup{innertopmargin=10pt,linecolor=orange!50,%
+linewidth=1.5pt,topline=true,roundcorner=3pt,%
+frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+}
+\begin{mdframed}[]\relax%
+\label{#2}}{\end{mdframed}}
+
+\newcommand{\CI}{\mathrel{\perp\mspace{-10mu}\perp}}
+\newcommand{\nCI}{\centernot{\CI}}
+\newcommand{\ein}{\varepsilon_{\mathrm{in}}}
+\newcommand{\eout}{\varepsilon_{\mathrm{out}}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\ev}{\operatorname{E}}
+\newcommand{\var}{\operatorname{Var}}
+\newcommand{\p}{\mathbb{P}}
+\newcommand{\af}{\varrho}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\D}{\operatorname{d}}
+\newcommand{\dkl}{\mathbb{D}_{\mathrm{KL}}}
+\newcommand{\f}{\mathbb{F}}
+\newcommand{\set}{\overset{\text{set}}{=}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+\newcommand{\g}{\mathbb{G}}
+\newcommand{\idxa}{\textrm{\ding{70}}}
+\newcommand{\idxb}{\textrm{\ding{72}}}
+\newcommand{\idxc}{\textrm{\ding{86}}}
+\newcommand{\post}{\textrm{\ding{71}}}
+\newcommand{\F}{\mathtt{f}}
+\newtheorem*{remark}{Remark}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{lem}{Lemma}[section]
+\newtheorem{cor}{Corollary}[section]
+\theoremstyle{definition}
+\newtheorem{exmpx}{Example}[section]
+\newtheorem{defnx}{Definition}[section]
+\newenvironment{defn}
+  {\pushQED{\qed}\renewcommand{\qedsymbol}{$\multimap$}\defnx}
+  {\popQED\enddefnx}
+\newenvironment{exmp}
+  {\pushQED{\qed}\renewcommand{\qedsymbol}{$\multimapdot$}\exmpx}
+  {\popQED\endexmpx}
+  \newenvironment{warning}
+  {\par\begin{mdframed}[linewidth=2pt,linecolor=gray]%
+    \begin{list}{}{\leftmargin=.5cm
+                   \labelwidth=\leftmargin}\item[\Large\ding{43}]}
+  {\end{list}\end{mdframed}\par}
+
+% for full expanding width table
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\newcolumntype{s}{>{\hsize=.6\textwidth}c}
+
+\def\title{\Large\bf Text Analytics of the Qur'\=an}
+\def\author{Al-Ahmadgaid Bahauddin Asaad}
+\def\program{\bf Master of Arts in Islamic Studies}
+\def\ddate{June 2025}
+
+\titleformat{\chapter}[block]
+    {\vspace{-3cm}\bfseries\Large\centering}{\chaptertitlename}{0.5ex}{\;\bfseries\Large\thechapter\\#1}
+
+\titleformat{name=\chapter,numberless}[block]
+    {\vspace{-3cm}\bfseries\Large\centering}{#1}{0.5ex}{}
+
+\titleformat{\section}[block]
+    {\bfseries\normalsize}{\thesection}{0.5ex}{\;#1}
+
+\titleformat{\subsection}[block]
+    {\bfseries\normalsize}{\thesubsection}{0.5ex}{\;#1}
+
+\begin{document} 
+\pagenumbering{roman}\setcounter{page}{1}
+\include{titlepage.tex}
+\doublespacing
+\include{chapters/approval_sheet}
+\include{chapters/distribution_copyright.tex}
+\include{chapters/dedication.tex}
+\include{chapters/acknowledgement.tex}
+\include{chapters/abstract.tex}
+\tableofcontents\newpage
+\listoffigures 
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoftables
+\addcontentsline{toc}{chapter}{List of Tables}
+\include{chapters/list_of_manuscripts.tex}
+\include{chapters/preface.tex}
+% \pagestyle{fancy}
+\pagenumbering{arabic}\setcounter{page}{1}
+\include{chapters/ch1.tex}
+\include{chapters/ch2.tex}
+\include{chapters/ch3.tex}
+\include{chapters/ch4.tex}
+\include{chapters/ch5.tex}
+\include{chapters/ch6.tex}
+\include{chapters/ch7.tex}
+\include{chapters/ch8.tex}
+\bibliographystyle{apacite}
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{References}
+\chapter*{References}
+\renewcommand{\refname}{List of Articles, Books, Online Resources}
+\bibliography{reference}
+\include{chapters/appendix.tex}
+\include{chapters/appendix_theoretical_results.tex}
+\include{chapters/appendix_methodology_theory.tex}
+\include{chapters/appendix_probstat.tex}
+\include{chapters/appendix_nlp.tex}
+\include{chapters/appendix_nn.tex}
+\include{chapters/appendix_extant_manuscripts.tex}
+\include{chapters/appendix_installation.tex}
+\include{chapters/cv.tex}
+\end{document}

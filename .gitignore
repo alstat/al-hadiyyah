@@ -47,3 +47,4 @@
 build/
 img/
 .DS_Store
+*.png
